@@ -10,8 +10,6 @@ def visualize(p1_wins, num_decks):
     data = cards_scores
     cards_scores[cards_scores == 0] = -1
     cards_combos = ["BBB","BBR","BRB","BRR","RBB","RBR","RRB","RRR"]
-
-    
     plt.subplot(1, 2, 1)
     viz = sns.heatmap(data, annot=True,xticklabels = cards_combos, yticklabels=cards_combos,cbar=False)
     plt.ylabel("Opponent Choice", fontsize = 12, labelpad=12)
