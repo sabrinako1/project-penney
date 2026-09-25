@@ -39,7 +39,10 @@ class Generator:
 		pairs = np.stack((first, second), axis=-1)
 		indices = np.arange(50)[None, None, None, :]
 
-		p1_wins = np.full((8, 8), 0)
+		p1_tricks = np.full((self.simulations, 8, 8), 0)
+		p2_tricks = np.full((self.simulations, 8, 8), 0)
+		p1_cards = np.full((self.simulations, 8, 8), 0)
+		p2_cards = np.full((self.simulations, 8, 8), 0)
 
 		while still_running.any():
 			mask = indices >= current_positions[:, :, :, None]
@@ -51,34 +54,24 @@ class Generator:
 			plays = np.min(player_plays, axis=3)
 
 			play_diffs = plays - current_positions
-			p1_wins += (diffs > 0).sum(axis=0)
+
+			p1_wins_round = diffs > 0
+			p2_wins_round = diffs < 0
+			p1_tricks += p1_wins_round
+			p2_tricks += p2_wins_round
+			p1_cards[p1_wins_round] += play_diffs[p1_wins_round]
+			p2_cards[p2_wins_round] += play_diffs[p2_wins_round]
 
 			current_positions = plays + 3
 
 			still_running = (current_positions < 50).any()
 
-		# current_positions = 
+		p1_wins_by_trick = (p1_tricks > p2_tricks).sum(axis=0)
+		p1_ties_by_trick = (p1_tricks == p2_tricks).sum(axis=0)
+		p1_wins_by_card = (p1_cards > p2_cards).sum(axis=0)
+		p1_ties_by_card = (p1_cards == p2_cards).sum(axis=0)
 
-		# 	p1_wins = plays_until_win[:, :, None] < plays_until_win[:, None, :]
-		# 	current_positions = np.minimum(plays_until_win[:, :, None], plays_until_win[:, None, :])
-			
-
-		# # Get minimum index of first match, 50 otherwise
-
-		# # p1_wins = (plays_until_win[:, :, None] < plays_until_win[:, None, :]).sum(axis=0)
-		# # print(p1_wins)
-
-		# return p1_wins.sum(axis=0)
-
-		# first_p1 = np.where(p1[:, None] == deck_patterns, indices, 50).min(axis=1)
-		# first_p2 = np.where(p2[:, None] == deck_patterns, indices, 50).min(axis=1)
-
-		# p1_wins = first_p1 < first_p2
-
-		# # Get counts of every unique combination, with p2 choice as row and p1 choice as column.
-		# grid = np.bincount(p1[p1_wins] + 8 * p2[p1_wins], minlength=64).reshape(8, 8)
-
-		return p1_wins
+		return p1_wins_by_trick, p1_ties_by_trick, p1_wins_by_card, p1_ties_by_card
 
 		
 
