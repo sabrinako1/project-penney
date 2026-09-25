@@ -2,12 +2,16 @@ from src.simulator import Simulator
 import matplotlib.pyplot as plt
 from src.viz import visualize
 
-simulations = 10_000
+simulations = 10_00
 
 simulator = Simulator()
 
 decks = simulator.generate_decks(simulations)
 
-p1_wins_by_trick, p1_ties_by_trick, p1_wins_by_card, p1_ties_by_card = simulator.score(decks)
+wins_by_trick, ties_by_trick, wins_by_card, ties_by_card = simulator.score(decks)
 
-visualize(p1_wins_by_trick, simulations)
+# Save decks here
+
+# Update scores here
+
+visualize(wins_by_trick, ties_by_trick, wins_by_card, ties_by_card, simulations)
