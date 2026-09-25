@@ -1,18 +1,17 @@
-from src.generator import Generator
+from src.simulator import Simulator
 import matplotlib.pyplot as plt
+from src.viz import visualize
 
-gen = Generator(simulations=100_000)
+simulations = 10_00
 
-p1_wins = gen.run()
+simulator = Simulator()
 
-# B = 0, R = 1. First suit is 4x, second suit is 2x, third suit is 1x.
-# BBB -> 0, BRB -> 2, BBR -> 1, RRR -> 7
-combinations = ['BBB', 'BBR', 'BRB', 'BRR', 'RBB', 'RBR', 'RRB', 'RRR']
+decks = simulator.generate_decks(simulations)
 
-fig, ax = plt.subplots(figsize=(9, 7))
-heatmap = ax.imshow(p1_wins)
+wins_by_trick, ties_by_trick, wins_by_card, ties_by_card = simulator.score(decks)
 
-ax.set_xticks(range(len(combinations)), labels=combinations)
-ax.set_yticks(range(len(combinations)), labels=combinations)
+# Save decks here
 
-plt.show()
+# Update scores here
+
+visualize(wins_by_trick, ties_by_trick, wins_by_card, ties_by_card, simulations)
