@@ -21,18 +21,64 @@ class Generator:
 		p2 = self.rng.integers(0, 7, size=self.simulations)
 		p2 += p2 >= p1
 
-		indices = np.arange(50)
+		choices = np.arange(8)
 
-		# Get minimum index of first match, 50 otherwise
-		first_p1 = np.where(p1[:, None] == deck_patterns, indices, 50).min(axis=1)
-		first_p2 = np.where(p2[:, None] == deck_patterns, indices, 50).min(axis=1)
+		current_positions = np.full((self.simulations, 8, 8), 0)
+		still_running = np.full((self.simulations, 8, 8), True)
 
-		p1_wins = first_p1 < first_p2
+		# simulations x 8 x 52
+		matches = deck_patterns[:, None, :] == choices[None, :, None]
 
-		# Get counts of every unique combination, with p2 choice as row and p1 choice as column.
-		grid = np.bincount(p1[p1_wins] + 8 * p2[p1_wins], minlength=64).reshape(8, 8)
+		# simulations x 8 x 8
+		first, second = np.broadcast_arrays(
+				matches[:, :, None, :],  # simulations x 8 x 1 x 50
+				matches[:, None, :, :]   # simulations x 1 x 8 x 50
+			)
 
-		return grid
+		# simulations x 8 x 8 x 50 x 2
+		pairs = np.stack((first, second), axis=-1)
+		indices = np.arange(50)[None, None, None, :]
+
+		p1_wins = np.full((8, 8), 0)
+
+		while still_running.any():
+			mask = indices >= current_positions[:, :, :, None]
+
+			masked_pairs = np.where(mask[..., None], pairs, False)
+			player_plays = np.argmax(masked_pairs, axis=-2)
+			player_plays[player_plays == 0] = 50
+			diffs = player_plays[:,:,:,0] - player_plays[:,:,:,1]
+			plays = np.min(player_plays, axis=3)
+
+			play_diffs = plays - current_positions
+			p1_wins += (diffs > 0).sum(axis=0)
+
+			current_positions = plays + 3
+
+			still_running = (current_positions < 50).any()
+
+		# current_positions = 
+
+		# 	p1_wins = plays_until_win[:, :, None] < plays_until_win[:, None, :]
+		# 	current_positions = np.minimum(plays_until_win[:, :, None], plays_until_win[:, None, :])
+			
+
+		# # Get minimum index of first match, 50 otherwise
+
+		# # p1_wins = (plays_until_win[:, :, None] < plays_until_win[:, None, :]).sum(axis=0)
+		# # print(p1_wins)
+
+		# return p1_wins.sum(axis=0)
+
+		# first_p1 = np.where(p1[:, None] == deck_patterns, indices, 50).min(axis=1)
+		# first_p2 = np.where(p2[:, None] == deck_patterns, indices, 50).min(axis=1)
+
+		# p1_wins = first_p1 < first_p2
+
+		# # Get counts of every unique combination, with p2 choice as row and p1 choice as column.
+		# grid = np.bincount(p1[p1_wins] + 8 * p2[p1_wins], minlength=64).reshape(8, 8)
+
+		return p1_wins
 
 		
 
