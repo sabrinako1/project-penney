@@ -24,8 +24,3 @@ def save(decks: np.ndarray, filename: str, seed: int) -> None:
         simulations=decks.shape[0],
         size=decks.shape[1]
     )
-
-# if i ran 1k simulations and i wanna run another 50, unpack everything and then combine it together
-# save each run as their own file
-# (deck count, deck size)
-# store decks every time i run i store a new deck, one file with the scores, t scores, and then update scores

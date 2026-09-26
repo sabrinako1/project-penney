@@ -1,5 +1,6 @@
 import random
 import numpy as np
+from input import update_progress
 
 class Simulator:
 	def __init__(self, seed: int = 1):
@@ -12,6 +13,8 @@ class Simulator:
 
 		# Shuffle decks
 		decks = self.rng.permuted(decks, axis=1)
+
+		return decks
 
 		
 	def score(self, decks):
@@ -54,6 +57,11 @@ class Simulator:
 			masked_pairs = np.where(mask[..., None], pairs, False)
 			player_plays = np.argmax(masked_pairs, axis=-2)
 			player_plays[player_plays == 0] = 50
+
+			# Update progress bar
+			lowest_index = player_plays.min()
+			update_progress(lowest_index, 50)
+
 			diffs = player_plays[:,:,:,0] - player_plays[:,:,:,1]
 			plays = np.min(player_plays, axis=3)
 
@@ -69,6 +77,8 @@ class Simulator:
 			current_positions = plays + 3
 
 			still_running = (current_positions < 50).any()
+
+		update_progress(50, 50)
 
 		p1_wins_by_trick = (p1_tricks > p2_tricks).sum(axis=0)
 		p1_ties_by_trick = (p1_tricks == p2_tricks).sum(axis=0)
