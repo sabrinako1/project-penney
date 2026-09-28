@@ -39,7 +39,7 @@ try:
         # # Update scores here
         wins_by_trick, ties_by_trick, wins_by_card, ties_by_card = update_scores(wins_by_trick, ties_by_trick, wins_by_card, ties_by_card, count)
 
-        # visualize(wins_by_trick, ties_by_trick, wins_by_card, ties_by_card, simulations)
+        visualize(wins_by_trick, ties_by_trick, wins_by_card, ties_by_card, count)
 
         reset()
 
