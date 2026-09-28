@@ -4,7 +4,8 @@ from input import update_progress
 
 class Simulator:
 	def __init__(self, seed: int = 1):
-		self.rng = np.random.default_rng(seed=seed)
+		self.seed = seed
+		self.rng = np.random.default_rng(seed=self.seed)
 		self.deck = np.array([0] * 26 + [1] * 26)
 
 	def generate_decks(self, count):
