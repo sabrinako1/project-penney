@@ -4,7 +4,7 @@ from src.viz import visualize
 from src.input import start_simulating, take_input, update_progress, reset
 import time
 import sys
-from src.bitpack import save, save_combined
+from src.bitpack import save, save_combined, update_scores, get_saved_count
 import os
 
 os.makedirs('data/raw', exist_ok=True)
@@ -14,9 +14,8 @@ simulator = Simulator()
 
 try:
 
-    count = 0
+    count = get_saved_count()
     while True:
-        
         
         simulations = take_input(count)
 
@@ -38,15 +37,11 @@ try:
         save_combined(decks, 'data/raw/aggregated.npz')
 
         # # Update scores here
+        wins_by_trick, ties_by_trick, wins_by_card, ties_by_card = update_scores(wins_by_trick, ties_by_trick, wins_by_card, ties_by_card, count)
 
         # visualize(wins_by_trick, ties_by_trick, wins_by_card, ties_by_card, simulations)
 
-
         reset()
-
 
 except KeyboardInterrupt:
     sys.exit(130)
-
-
-
