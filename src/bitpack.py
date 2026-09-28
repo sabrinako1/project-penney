@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 def pack(decks: np.ndarray) -> np.ndarray:
     packed = np.packbits(decks, axis=1)
@@ -31,4 +32,17 @@ def combine(filenames: list[str]) -> np.ndarray:
     return combined_decks
 
 def update_scores(wins_by_trick: np.ndarray, ties_by_trick: np.ndarray, wins_by_card: np.ndarray, ties_by_card: np.ndarray, simulations: int):
-    pass
+    
+    sequences = ['BBB', 'BBR', 'BRB', 'BRR', 'RBB', 'RBR', 'RRB', 'RRR']
+
+    return
+
+def save_combined(decks: np.ndarray, filename: str) -> None:
+    try:
+        old_decks = load(filename)
+        combined_decks = np.concatenate([old_decks, decks], axis=0)
+    except FileNotFoundError:
+        combined_decks = decks
+
+    packed_decks = pack(combined_decks)
+    np.savez(file=filename, packed_decks=packed_decks, simulations=combined_decks.shape[0], size=combined_decks.shape[1])

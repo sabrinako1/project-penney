@@ -4,7 +4,7 @@ from src.viz import visualize
 from src.input import start_simulating, take_input, update_progress, reset
 import time
 import sys
-from src.bitpack import save
+from src.bitpack import save, save_combined
 import os
 
 os.makedirs('data/raw', exist_ok=True)
@@ -35,6 +35,7 @@ try:
         # # Save decks here
         filename = f'data/raw/{start}-{count}.npz'
         save(decks, filename, simulator.seed)
+        save_combined(decks, 'data/raw/aggregated.npz')
 
         # # Update scores here
 
