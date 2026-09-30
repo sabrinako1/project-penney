@@ -20,6 +20,9 @@ try:
         
         simulations = take_input(count)
 
+        file_count = len([f for f in os.listdir('data/raw')])
+        simulator.seed = file_count
+
         if not simulations:
             break
 
