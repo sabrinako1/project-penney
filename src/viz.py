@@ -9,7 +9,7 @@ def visualize(p1_wins_by_trick, p1_ties_by_trick, p1_wins_by_card, p1_ties_by_ca
 
     # SCORING BY CARDS
     plt.figure(figsize=(16, 8))
-    cmap = sns.color_palette("rocket", as_cmap=True)
+    cmap = sns.color_palette("Blues", as_cmap=True)
     cmap.set_bad("lightgray")
     cards_scores = (p1_wins_by_card/num_decks) * 100
     data = cards_scores
@@ -29,7 +29,6 @@ def visualize(p1_wins_by_trick, p1_ties_by_trick, p1_wins_by_card, p1_ties_by_ca
     data = tricks_scores
     np.fill_diagonal(tricks_scores, np.nan)
     cards_combos = ["BBB","BBR","BRB","BRR","RBB","RBR","RRB","RRR"]
-
     plt.subplot(1, 2, 2)
     percent_wins_tricks = (p1_wins_by_trick/num_decks) * 100
     percent_ties_tricks = (p1_ties_by_trick/num_decks) * 100
