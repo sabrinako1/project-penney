@@ -3,7 +3,7 @@ import numpy as np
 from input import update_progress
 
 class Simulator:
-	def __init__(self, seed: int = 1):
+	def __init__(self, seed: int = None):
 		self.seed = seed
 		self.rng = np.random.default_rng(seed=self.seed)
 		self.deck = np.array([0] * 26 + [1] * 26)
