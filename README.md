@@ -49,4 +49,5 @@ Our final results are based on 6767676 randomly simulated decks, where each one 
 6. RBR --> BBR | RRB
 7. RRB --> BRR | BRR
 8. RRR --> BRR | BRR
+
 This shows that the player who chooses their sequence second has the advantage since they are able to respond their opponent's initial choice. BRB and RBR are the safest first picks because they give the opponent's counter the smallest advantage. The best responses win around 89-100% of rounds by cards and 79-99% by tricks. These results are pretty consistent between by card and by trick, as 6 of the 8 sequences for the opponent's choice have the same optimal response. They were also basically the same between 100067 and 6767676 decks, showing that the results level out after a sufficiently large number of simulations.
