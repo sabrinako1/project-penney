@@ -30,3 +30,23 @@ At the end of the game, both players count up how many cards they were awarded. 
 The purpose of the investigation is to analyze the differences in each of the card combinations in the H-N game, and looking at the differences in these combinations when scored by tricks vs cards. 
 
 Ultimately, when looking at these differences, we can aim to find the best strategy possible when scored by tricks or cards.
+
+## HOW TO RUN
+This project uses the Python package manager uv, so if not installed go to https://docs.astral.sh/uv/ to install based on your operating system. After you've installed, run the program with:
+```python
+uv run main.py
+```
+What will be displayed a large PENNEY 67 card design above the number of decks that have already been simulated. If this is your first run, it should be 0 but if you should happen to run it multiple times, the number of deck simulations is saved and will continue to accumulate! Below that is where you can enter an additional amount of decks to simulate. New decks are generated, scored, and then updated with the previously run decks. The raw decks, processed results, and updated heatmaps are then saved in their respective directories (data for the decks/results and figures for the heatmaps).
+
+## OUR FINDINGS
+Our final results are based on 6767676 randomly simulated decks, where each one was used to evaluate the 56 valid combinations of three-card sequences. By looking at the heatmap, we can determine the best response to each opponent choice by selecting the highest win percentage in each row. 
+### Opponent Choice --> Best Response by Cards | Best Response by Tricks
+1. BBB --> RBB | RBB
+2. BBR --> RBB | RBB
+3. BRB --> RRB | BBR
+4. BRR --> BBR | BBR
+5. RBB --> RRB | RRB
+6. RBR --> BBR | RRB
+7. RRB --> BRR | BRR
+8. RRR --> BRR | BRR
+This shows that the player who chooses their sequence second has the advantage since they are able to respond their opponent's initial choice. BRB and RBR are the safest first picks because they give the opponent's counter the smallest advantage. The best responses win around 89-100% of rounds by cards and 79-99% by tricks. These results are pretty consistent between by card and by trick, as 6 of the 8 sequences for the opponent's choice have the same optimal response. They were also basically the same between 100067 and 6767676 decks, showing that the results level out after a sufficiently large number of simulations.
