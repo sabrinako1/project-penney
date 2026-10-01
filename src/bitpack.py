@@ -46,6 +46,7 @@ def combine(filenames: list[str]) -> np.ndarray:
 
     for filename in filenames:
         runs.append(load(filename))
+    # stack every batch together by row
     combined_decks = np.concatenate(runs, axis=0)
 
     return combined_decks
@@ -56,16 +57,18 @@ def update_scores(wins_by_trick: np.ndarray, ties_by_trick: np.ndarray, wins_by_
     '''
     try:
         old_scores = pd.read_csv(scores_file)
-
+        # add saved to newest batch
         wins_by_trick += old_scores['wins_by_trick'].to_numpy().reshape(8, 8)
         ties_by_trick += old_scores['ties_by_trick'].to_numpy().reshape(8, 8)
         wins_by_card += old_scores['wins_by_card'].to_numpy().reshape(8, 8)
         ties_by_card += old_scores['ties_by_card'].to_numpy().reshape(8, 8)
     except FileNotFoundError:
+        # only if there are no previous totals during the first run
         pass
 
     sequences = ['BBB', 'BBR', 'BRB', 'BRR', 'RBB', 'RBR', 'RRB', 'RRR']
 
+    # one row for each of the 8x8 sequence combinations
     scores = pd.DataFrame({
         'my_choice': np.repeat(sequences, 8),
         'opponent_choice': np.tile(sequences, 8),
@@ -89,6 +92,7 @@ def save_combined(decks: np.ndarray, filename: str) -> None:
     except FileNotFoundError:
         combined_decks = decks
 
+    # repack all decks and save
     packed_decks = pack(combined_decks)
     np.savez(file=filename, packed_decks=packed_decks, simulations=combined_decks.shape[0], size=combined_decks.shape[1])
 
@@ -99,5 +103,6 @@ def get_saved_count() -> int:
     try:
         scores = pd.read_csv(scores_file)
     except FileNotFoundError:
+        # start at 0 if there aren't any saved simulations
         return 0
     return int(scores['simulations'].iloc[0])
