@@ -41,6 +41,7 @@ def update_scores(wins_by_trick: np.ndarray, ties_by_trick: np.ndarray, wins_by_
         ties_by_trick += old_scores['ties_by_trick'].to_numpy().reshape(8, 8)
         wins_by_card += old_scores['wins_by_card'].to_numpy().reshape(8, 8)
         ties_by_card += old_scores['ties_by_card'].to_numpy().reshape(8, 8)
+
     except FileNotFoundError:
         pass
 

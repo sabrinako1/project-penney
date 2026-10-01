@@ -24,7 +24,11 @@ penney = rf"""
 {BOLD}{DIM}{RED}░█▌   ░█▙▄▄▖░█▌░█▌░█▌░█▌░█▙▄▄▖  ▄▄█▌
 """.split('\n')
 
-def random_card(*stat_lines):
+def six_seven_card(*stat_lines):
+	"""
+	Prints the great 67 of hearts card, along with the PENNEY title and stat lines.
+	"""
+
 	choices = [str(x + 2) for x in range(9)]
 	choices.extend(['J', 'Q', 'K', 'A'])
 	card_number = random.choice(choices)
@@ -49,16 +53,15 @@ def random_card(*stat_lines):
 	print(card)
 
 def take_input(deck_count):
-	random_card(
+	"""
+	Prints the main screen and awaits input. This will also validate inputed deck sizes.
+	"""
+
+	six_seven_card(
 		('Current deck count', deck_count)
 		)
-	# print(f'{DIM}Current deck count: {RESET}{BOLD}{deck_count}{RESET}\n')
 	print()
 	print(f'{RED}█ {RESET}{BOLD}Input number of new simulations')
-	# print_formatted_text(FormattedText([
-	#     ("fg:ansired", "█ "),
-	#     ("bold", "Input number of new simulations"),
-	# ]))
 
 	invalid = False
 
@@ -87,15 +90,15 @@ def take_input(deck_count):
 			sys.stdout.write("\033[1A\r\033[K")
 			sys.stdout.flush()
 			invalid = True
-			# print(f'{BOLD}{RED}→ {DIM}Invalid {RESET}', end='', flush=True)
-			# time.sleep(1)
-			# sys.stdout.write("\r\033[K")
-			# sys.stdout.flush()
 
 
 	return number
 
 def start_simulating():
+	"""
+	This removes the deck count input text and draws an empty progress bar.
+	"""
+
 	sys.stdout.write("\x1b[1A\r\x1b[2K")
 	sys.stdout.write("\x1b[1A\r\x1b[2K")
 
@@ -112,6 +115,13 @@ def start_simulating():
 
 
 def update_progress(complete, total):
+	"""
+	Clears the last two lines and redraws the progress bar. 
+
+	Parameters:
+	complete (int): the completed count
+	total (int): the total count
+	"""
 
 	sys.stdout.write("\033[1A\r\033[K")
 	sys.stdout.flush()
@@ -124,4 +134,8 @@ def update_progress(complete, total):
 	print(f'\r{bar}')
 
 def reset():
+	"""
+	Moves the cursor up to the top of the screen in preparation to redraw the entire screen
+	"""
+
 	sys.stdout.write("\033[13A\r\033[K")

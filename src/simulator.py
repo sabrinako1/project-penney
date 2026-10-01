@@ -3,12 +3,22 @@ import numpy as np
 from input import update_progress
 
 class Simulator:
-	def __init__(self, seed: int = None):
+	def __init__(self, seed: int | None = None):
 		self.seed = seed
 		self.rng = np.random.default_rng(seed=self.seed)
 		self.deck = np.array([0] * 26 + [1] * 26)
 
-	def generate_decks(self, count):
+	def generate_decks(self, count: int):
+		"""
+		Generates (count) shuffled decks
+
+		Parameters:
+		count (int): The number of decks to make
+
+		Returns:
+		ndarray: The generated decks
+		"""
+
 		# One deck per simulation
 		decks = np.tile(self.deck, (count, 1))
 
@@ -18,7 +28,22 @@ class Simulator:
 		return decks
 
 		
-	def score(self, decks):
+	def score(self, decks: np.ndarray):
+		"""
+		Scores the decks both by tricks and by cards.
+
+		Parameters:
+		decks (ndarray): Decks to score. Shape should be (n, 52) with n
+			being the number of cards.
+
+		Returns:
+		p1_wins_by_trick (ndarray): (8, 8) count of wins by trick
+		p1_ties_by_trick (ndarray): (8, 8) count of ties by trick
+		p1_wins_by_card (ndarray): (8, 8) count of wins by card
+		p1_ties_by_card (ndarray): (8, 8) count of ties by card
+
+		"""
+
 		deck_count = decks.shape[0]
 
 		# Get the three card pattern at each index
@@ -46,18 +71,23 @@ class Simulator:
 		pairs = np.stack((first, second), axis=-1)
 		indices = np.arange(50)[None, None, None, :]
 
+		# Initialize arrays for tracking scores of individual decks
 		p1_tricks = np.full((deck_count, 8, 8), 0)
 		p2_tricks = np.full((deck_count, 8, 8), 0)
 		p1_cards = np.full((deck_count, 8, 8), 0)
 		p2_cards = np.full((deck_count
 			, 8, 8), 0)
 
+		# Updates all decks at the same time. Some decks will be at different
+		# positions at different times.
 		while still_running.any():
+			# Mask for all cards that haven't been played in the deck
 			mask = indices >= current_positions[:, :, :, None]
+
 
 			masked_pairs = np.where(mask[..., None], pairs, False)
 			player_plays = np.argmax(masked_pairs, axis=-2)
-			player_plays[player_plays == 0] = 50
+			player_plays[player_plays == 0] = 50  #
 
 			# Update progress bar
 			lowest_index = player_plays.min()
@@ -75,12 +105,16 @@ class Simulator:
 			p1_cards[p1_wins_round] += play_diffs[p1_wins_round]
 			p2_cards[p2_wins_round] += play_diffs[p2_wins_round]
 
+			# Skip forwards the number of plays + 3, since we each trick is 3 cards.
 			current_positions = plays + 3
 
+			# 
 			still_running = (current_positions < 50).any()
 
+		# Finalize progress bar
 		update_progress(50, 50)
 
+		# Sum individual decks to get one (8, 8) array
 		p1_wins_by_trick = (p1_tricks > p2_tricks).sum(axis=0)
 		p1_ties_by_trick = (p1_tricks == p2_tricks).sum(axis=0)
 		p1_wins_by_card = (p1_cards > p2_cards).sum(axis=0)
